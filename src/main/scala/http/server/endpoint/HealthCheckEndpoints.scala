@@ -14,22 +14,12 @@ final case class HealthCheckEndpoints() extends HealthCheckEndpointsAlg {
 
   import PathCodec.*
 
-  // todo: replace with zio json
   val jsonSuccessResponse =
     """
       |{
       | "output": "Hello World!"
       |}
       |""".stripMargin
-
-  val notFoundEndpointResponse =
-    """
-      |{
-      | "output": "This endpoint has not been implemented!"
-      |}
-      |""".stripMargin
-
-//  private val defaultNotFoundEndpoint = Endpoint(Method.ANY / Root).out[String]
 
   private val getStatusEndpoint =
     Endpoint(Method.GET / Root / "status").out[String]
@@ -38,17 +28,12 @@ final case class HealthCheckEndpoints() extends HealthCheckEndpointsAlg {
     ZIO.logInfo("get status route").as(jsonSuccessResponse)
   }
 
-//  private val defaultNotFoundRoute: Route[Any, Nothing] = defaultNotFoundEndpoint.implement(_ => ZIO.succeed(notFoundEndpointResponse))
 
-  private val openAPI = OpenAPIGen.fromEndpoints(title = "Swagger Example", version = "1.0", getStatusEndpoint/*, defaultNotFoundEndpoint*/)
+  private val openAPI = OpenAPIGen.fromEndpoints(title = "Swagger Example", version = "1.0", getStatusEndpoint)
 
-  def routes: Routes[Any, Response] = Routes(getStatusRoute/*, defaultNotFoundRoute*/) ++ SwaggerUI.routes("docs" / "openapi", openAPI)
-
-//  val routes: Routes[Any, Nothing] =
-//    Routes(
-//      Method.GET / Root / "status" -> handler(Response.json(jsonSuccessResponse)),
-//      Method.ANY / Root -> handler(Response.notFound("This endpoint does not exist"))
-//    ) ++ SwaggerUI.routes("docs" / "openapi", openAPI) SwaggerUI.routes("docs" / "openapi", openAPI)
+  def routes: Routes[Any, Response] = Routes.fromIterable(List(
+    getStatusRoute
+  )) ++ SwaggerUI.routes("docs" / "openapi", openAPI)
 
 }
 
