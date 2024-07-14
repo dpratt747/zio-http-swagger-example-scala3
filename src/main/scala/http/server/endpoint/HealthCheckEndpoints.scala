@@ -2,19 +2,17 @@ package http.server.endpoint
 
 import zio.*
 import zio.http.*
-import zio.http.codec.PathCodec
 import zio.http.endpoint.Endpoint
-import zio.http.endpoint.openapi.*
+import zio.http.endpoint.EndpointMiddleware.None
 
 trait HealthCheckEndpointsAlg {
+  def endpoints: List[Endpoint[Unit, Unit, ZNothing, String, None]]
   def routes: Routes[Any, Response]
 }
 
 final case class HealthCheckEndpoints() extends HealthCheckEndpointsAlg {
-
-  import PathCodec.*
-
-  val jsonSuccessResponse =
+  
+  private val jsonSuccessResponse =
     """
       |{
       | "output": "Hello World!"
@@ -24,16 +22,16 @@ final case class HealthCheckEndpoints() extends HealthCheckEndpointsAlg {
   private val getStatusEndpoint =
     Endpoint(Method.GET / Root / "status").out[String]
 
-  private val getStatusRoute = getStatusEndpoint.implement{ _ =>
-    ZIO.logInfo("get status route").as(jsonSuccessResponse)
+  private val getStatusRoute = getStatusEndpoint.implement { _ =>
+    ZIO.succeed(jsonSuccessResponse)
   }
-
-
-  private val openAPI = OpenAPIGen.fromEndpoints(title = "Swagger Example", version = "1.0", getStatusEndpoint)
-
+  def endpoints: List[Endpoint[Unit, Unit, ZNothing, String, None]] = List(
+    getStatusEndpoint
+  )
+  
   def routes: Routes[Any, Response] = Routes.fromIterable(List(
     getStatusRoute
-  )) ++ SwaggerUI.routes("docs" / "openapi", openAPI)
+  ))
 
 }
 

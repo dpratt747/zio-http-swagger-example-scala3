@@ -1,4 +1,6 @@
-curl --location 'http://localhost:8080/'
+```bash
+curl --location 'http://localhost:8080/status'
+```
 
 ## To reach the open api/swagger docs use this url: 
 `http://localhost:8080/docs/openapi`
