@@ -1,11 +1,11 @@
 package http.server.endpoint
 
-import _root_.http.server.domain.StatusResponse
+import http.server.domain.StatusResponse
+import zio.*
 import zio.http.*
 import zio.http.codec.HttpContentCodec
 import zio.http.endpoint.Endpoint
 import zio.http.endpoint.EndpointMiddleware.None
-import zio.*
 
 
 trait HealthCheckEndpointsAlg {
@@ -17,7 +17,7 @@ final case class HealthCheckEndpoints() extends HealthCheckEndpointsAlg {
 
 
   /***
-   * first set of endpoints to confirm composing more than one endpoint works
+   * First set of endpoints and routes to confirm composing more than one endpoint works
    */
   private val helloEndpoint =
     Endpoint(Method.GET / Root / "hello").out[String]
@@ -27,7 +27,7 @@ final case class HealthCheckEndpoints() extends HealthCheckEndpointsAlg {
   }
 
   /***
-   * second set of endpoints
+   * Second set of endpoints and routes
    */
 
   private val getStatusEndpoint =
@@ -36,6 +36,10 @@ final case class HealthCheckEndpoints() extends HealthCheckEndpointsAlg {
   private val getStatusRoute = getStatusEndpoint.implement { _ =>
     ZIO.succeed(StatusResponse("Hello World!"))
   }
+  
+  /***
+   * Returns the public endpoints and routes
+   */
   def endpoints: List[Endpoint[Unit, Unit, ZNothing, ? >: StatusResponse & String <: Serializable, None]] = List(
     getStatusEndpoint,
     helloEndpoint
