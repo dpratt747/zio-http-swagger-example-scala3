@@ -15,20 +15,22 @@ object Main extends ZIOAppDefault {
     if (incomingStatus.isSuccess) LogLevel.Info
     else LogLevel.Error
 
-  override def run: ZIO[Any, Nothing, Unit] = (for {
+  override def run: ZIO[Any, Throwable, Unit] = (for {
     (healthEndpoints, healthRoutes) <- ZIO.serviceWith[HealthCheckEndpointsAlg]{ service => (service.endpoints, service.routes) }
+    (fileEndpoints, fileRoutes) <- ZIO.serviceWith[FilesEndpointsAlg]{ service => (service.endpoints, service.routes) }
     loggingMiddleware = Middleware.requestLogging(
       logRequestBody = true,
       logResponseBody = true,
       level = logLevel
     )
-    composedEndpoints = healthEndpoints // todo: add new endpoints here
+    composedEndpoints = healthEndpoints ++ fileEndpoints // todo: add new endpoints here
     openAPI = OpenAPIGen.fromEndpoints(title = "ZIO Http Swagger Example", version = "1.0", composedEndpoints)
     swaggerRoute = SwaggerUI.routes("docs" / "openapi", openAPI)
-    composedRoutesWithLogging = (healthRoutes ++ swaggerRoute) @@ loggingMiddleware //todo: add new routes here
+    composedRoutesWithLogging = (healthRoutes ++ fileRoutes ++ swaggerRoute) @@ loggingMiddleware //todo: add new routes here
     _ <- Server.serve(composedRoutesWithLogging)
   } yield ()).provide(
     HealthCheckEndpoints.live,
-    Server.default.orDie
+    FilesEndpoints.live,
+    Server.default
   )
 }

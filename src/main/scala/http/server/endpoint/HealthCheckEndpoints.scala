@@ -10,13 +10,14 @@ import zio.http.endpoint.EndpointMiddleware.None
 
 trait HealthCheckEndpointsAlg {
   def endpoints: List[Endpoint[Unit, Unit, ZNothing, ? >: StatusResponse & String <: Serializable, None]]
+
   def routes: Routes[Any, Response]
 }
 
 final case class HealthCheckEndpoints() extends HealthCheckEndpointsAlg {
 
 
-  /***
+  /**
    * First set of endpoints and routes to confirm composing more than one endpoint works
    */
   private val helloEndpoint =
@@ -26,7 +27,7 @@ final case class HealthCheckEndpoints() extends HealthCheckEndpointsAlg {
     ZIO.succeed("Hello stranger")
   }
 
-  /***
+  /**
    * Second set of endpoints and routes
    */
 
@@ -36,8 +37,9 @@ final case class HealthCheckEndpoints() extends HealthCheckEndpointsAlg {
   private val getStatusRoute = getStatusEndpoint.implement { _ =>
     ZIO.succeed(StatusResponse("Hello World!"))
   }
-  
-  /***
+
+
+  /**
    * Returns the public endpoints and routes
    */
   def endpoints: List[Endpoint[Unit, Unit, ZNothing, ? >: StatusResponse & String <: Serializable, None]] = List(

@@ -5,7 +5,7 @@ ThisBuild / organizationName := "example"
 
 lazy val zioVersion = "2.1.6"
 lazy val zioHttpVersion = "3.0.0-RC9"
-lazy val zioJsonVersion = "0.6.2"
+lazy val zioJsonVersion = "0.7.3"
 
 lazy val root = (project in file("."))
   .settings(
