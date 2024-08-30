@@ -1,3 +1,29 @@
+# What this contains:
+* zio-http endpoint examples
+
+### Swagger/Open api endpoints for the following:
+
+#### Sending files
+```bash
+curl -X 'POST' \
+  'http://localhost:8080/file' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/octet-stream' \
+  --data-binary '@README.md'
+```
+#### Getting files:
+```bash
+curl -X 'GET' \
+  'http://localhost:8080/file' \
+  -H 'accept: application/octet-stream'
+```
+#### Status endpoint:
+```bash
+curl -X 'GET' \
+  'http://localhost:8080/status' \
+  -H 'accept: application/json'
+```
+
 # To run the application:
 
 ```bash
