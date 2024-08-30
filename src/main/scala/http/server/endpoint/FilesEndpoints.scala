@@ -45,7 +45,7 @@ final case class FilesEndpoints() extends FilesEndpointsAlg {
         HttpCodec.contentStream[Byte] ++
           HttpCodec.contentDisposition.const(
             ContentDisposition.Attachment(Some("filename.txt"))
-          )
+          ) /*++ HttpCodec.status(Status.Ok)*/ // todo: edit this to change the status code response
       )
 
   private val getFileRoute = getFileEndpoint.implement { _ =>
