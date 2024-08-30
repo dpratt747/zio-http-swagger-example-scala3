@@ -32,7 +32,7 @@ object FileEndpointsSpec extends ZIOSpecDefault {
     }
   )
 
-  private val postFileTests = suite("/Hello")(
+  private val postFileTests = suite("POST /file")(
     test("returns 200 when POST /file is called") {
       for {
         routes <- ZIO.serviceWith[FilesEndpointsAlg](_.routes)

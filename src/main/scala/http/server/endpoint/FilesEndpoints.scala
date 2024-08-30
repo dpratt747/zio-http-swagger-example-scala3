@@ -23,12 +23,12 @@ final case class FilesEndpoints() extends FilesEndpointsAlg {
    * First set of endpoints and routes POST (file)
    */
 
-  private val postReadMeEndpoint =
+  private val postFileEndpoint =
     Endpoint(Method.POST / Root / "file")
-      .inStream[Byte]("upload")
+      .inStream[Byte]
       .out[StatusResponse]
 
-  private val postReadMeRoute = postReadMeEndpoint.implement { inputStream =>
+  private val postFileRoute = postFileEndpoint.implement { inputStream =>
     for {
       collectedStream <- inputStream.runCollect
       res = new String(collectedStream.toArray)
@@ -39,7 +39,7 @@ final case class FilesEndpoints() extends FilesEndpointsAlg {
    * Second set of endpoints and routes GET (file)
    */
 
-  private val getReadMeEndpoint =
+  private val getFileEndpoint =
     Endpoint(Method.GET / Root / "file")
       .outCodec(
         HttpCodec.contentStream[Byte] ++
@@ -48,8 +48,7 @@ final case class FilesEndpoints() extends FilesEndpointsAlg {
           )
       )
 
-
-  private val getReadMeRoute = getReadMeEndpoint.implement { _ =>
+  private val getFileRoute = getFileEndpoint.implement { _ =>
     for {
       str <- ZIO.succeed("some string")
       stream = ZStream.fromIterable(str.getBytes())
@@ -61,13 +60,13 @@ final case class FilesEndpoints() extends FilesEndpointsAlg {
    * Returns the public endpoints and routes
    */
   def endpoints: List[Endpoint[Unit, ? >: ZStream[Any, Nothing, Byte] & Unit, ZNothing, ? >: StatusResponse & ZStream[Any, Nothing, Byte] <: Object, None]] = List(
-    postReadMeEndpoint,
-    getReadMeEndpoint
+    postFileEndpoint,
+    getFileEndpoint
   )
 
   def routes: Routes[Any, Response] = Routes.fromIterable(List(
-    postReadMeRoute,
-    getReadMeRoute
+    postFileRoute,
+    getFileRoute
   ))
 
 }
