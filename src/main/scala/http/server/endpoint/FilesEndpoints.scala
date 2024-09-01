@@ -7,7 +7,7 @@ import zio.http.Header.ContentDisposition
 import zio.http.Header.ContentDisposition.Attachment
 import zio.http.codec.{HttpCodec, HttpContentCodec}
 import zio.http.endpoint.Endpoint
-import zio.http.endpoint.EndpointMiddleware.None
+import zio.http.endpoint.AuthType.None
 import zio.stream.ZStream
 
 

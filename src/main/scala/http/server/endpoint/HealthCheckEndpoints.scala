@@ -5,7 +5,7 @@ import zio.*
 import zio.http.*
 import zio.http.codec.HttpContentCodec
 import zio.http.endpoint.Endpoint
-import zio.http.endpoint.EndpointMiddleware.None
+import zio.http.endpoint.AuthType.None
 
 
 trait HealthCheckEndpointsAlg {
