@@ -41,6 +41,7 @@ final case class FilesEndpoints() extends FilesEndpointsAlg {
 
   private val getFileEndpoint =
     Endpoint(Method.GET / Root / "file")
+//      .outStream[Byte]
       .outCodec(
         HttpCodec.contentStream[Byte] ++
           HttpCodec.contentDisposition.const(

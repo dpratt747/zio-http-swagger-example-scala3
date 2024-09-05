@@ -3,7 +3,7 @@ ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / organization := "com.example"
 ThisBuild / organizationName := "example"
 
-lazy val zioVersion = "2.1.6"
+lazy val zioVersion = "2.1.9"
 lazy val zioHttpVersion = "3.0.0-RC10"
 lazy val zioJsonVersion = "0.7.3"
 
