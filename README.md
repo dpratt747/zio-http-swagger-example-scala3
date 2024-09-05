@@ -1,5 +1,6 @@
 # What this contains:
 * zio-http endpoint examples
+* reading from file and sending files via http
 
 ### Swagger/Open api endpoints for the following:
 
